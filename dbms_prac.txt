@@ -1,0 +1,240 @@
+create table DEPARTMENT( 
+    Dno integer primary key, 
+    Dname varchar(50) , 
+    location_dep varchar(50)  default 'New Delhi' 
+)
+
+insert all 
+into department values (10,'Accounting','New York')
+into department values (20,'Research','Dallas')
+into department values (30,'Sales','Chicago')
+into department values (40,'Operation','Boston')
+into department values (50,'Marketing','New Delhi')
+select * from dual
+
+create table EMPLOYEE( 
+    Eno char(3) not null, 
+    Ename varchar(50) not null, 
+    Job_type varchar(50) not null, 
+    Manager char(3), 
+    Hire_date date not null, 
+    Dno integer, 
+    Commission decimal(10,2), 
+    Salary decimal(7,2) not null, 
+    PRIMARY KEY (Eno),
+    FOREIGN KEY (Manager) REFERENCES EMPLOYEE (Eno), 
+    FOREIGN KEY (Dno) REFERENCES EMPLOYEE (Dno)
+)
+
+
+insert all 
+into employee values ('736','Smith','Clerk','790','1981-12-17',20,0.00,1000.00)
+into employee values ('749','Allan','Sales_man','769','1981-02-20',30,300.00,2000.00)
+into employee values ('752','Ward','Sales_man','769','1981-02-22',30,500.00,1300.00)
+into employee values ('756','Jones','Manager','783','1981-04-02',20,0.00,2300.00)
+into employee values ('765','Martin','Sales_man','784','1981-04-22',30,1400.00,1250.00)
+into employee values ('769','Blake','Manager','783','1981-05-01',30,0.00,2870.00)
+into employee values ('778','Clark','Manager','783','1981-06-09',10,0.00,2900.00)
+into employee values ('783','King','President',NULL,'1981-11-17',10,0.00,2950.00)
+into employee values ('784','Turner','Sales_man','769','1981-09-08',30,0.00,1450.00),
+into employee values ('787','Adams','Clerk','778','1983-01-12',20,0.00,1150.00),
+into employee values ('788','Scott','Analyst','756','1982-12-09',20,0.00,2850.00),
+into employee values ('790','James','Clerk','769','1981-12-03',30,0.00,950.00),
+into employee values ('792','Ford','Analyst','756','1981-12-03',20,0.00,2600.00),
+into employee values ('793','Miller','Clerk','788','1982-01-23',40,0.00,1300.00);
+select * from dual
+
+1. Query to display Employee Name, Job, Hire Date, Employee Number; for each employee with
+the Employee Number appearing first.
+select  Ename,job_type,hire_date,eno from employee
+
+
+2. Query to display unique Jobs from the Employee Table.
+select  distinct job_type from employee
+
+3. Query to display the Employee Name concatenated by a Job separated by a comma.
+select ename||','||job_type 
+from employee
+
+4. Query to display all the data from the Employee Table. Separate each Column by a comma and
+name the said column as THE_OUTPUT.
+select eno||','|| ename||','||job_type||','||manager||','||hire_date||','||dno||','||commission||','||salary AS THE_OUTPUT 
+from employee
+
+5. Query to display the Employee Name and Salary of all the employees earning more than $2850.
+SELECT ename,salary 
+FROM employee 
+Where salary>2850
+
+6. Query to display Employee Name and Department Number for the Employee No= 7900.
+SELECT ename,dno 
+FROM employee 
+Where eno='7900'
+
+7. Query to display Employee Name and Salary for all employees whose salary is not in the range
+of $1500 and $2850.
+SELECT ename,salary 
+FROM employee 
+Where salary not between 1500 and 2850
+
+8. Query to display Employee Name and Department No. of all the employees in Dept 10 and
+Dept 30 in the alphabetical order by name.
+SELECT ename,dno 
+FROM employee 
+Where dno in (10,30) 
+order by ename
+
+9. Query to display Name and Hire Date of every Employee who was hired in 1981.
+SELECT ename, TO_CHAR(hire_date, 'YYYY-MM-DD') as hire_date 
+FROM employee 
+WHERE TO_CHAR(hire_date, 'YYYY')='1981'
+
+10. Query to display Name and Job of all employees who don’t have a current Manager.
+SELECT ename, job_type 
+FROM employee 
+WHERE Manager is null
+
+11. Query to display the Name, Salary and Commission for all the employees who earn
+commission.
+SELECT ename, salary, commission 
+FROM employee 
+WHERE commission is not null or commission <> 0
+
+12. Sort the data in descending order of Salary and Commission.
+SELECT * 
+FROM employee 
+Order by salary desc, commission desc
+
+13. Query to display Name of all the employees where the third letter of their name is ‘A’.
+SELECT ename 
+FROM employee 
+where ename like '__a%'
+
+
+14. Query to display Name of all employees either have two ‘R’s or have two ‘A’s in their name
+and are either in Dept No = 30 or their Manger’s Employee No = 7788.
+select ename 
+from employee 
+where ((ename like '%r%r%' or ename like '%a%a%') and dno=30) or manager='7778'
+
+15. Query to display Name, Salary and Commission for all employees whose Commission Amount
+is 14 greater than their Salary increased by 5%.
+select ename, commission, salary 
+from employee e 
+where e.commission= ((e.salary*1.05)+14)
+
+16. Query to display the Current Date.
+SELECT TO_CHAR 
+    (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') "NOW" 
+     FROM DUAL
+
+17. Query to display Name, Hire Date and Salary Review Date which is the 1st Monday after six
+months of employment.
+select ename,hire_date,NEXT_DAY(ADD_MONTHS(Hire_date,6),'MONDAY') SAL_REVIEW 
+from employee
+
+18. Query to display Name and calculate the number of months between today and the date each
+employee was hired.
+select ename,ROUND(MONTHS_BETWEEN(SYSDATE, Hire_date)) MONTHS_WORKED 
+from employee
+
+19. Query to display the following for each employee <E-Name> earns < Salary> monthly but
+wants < 3 * Current Salary >. Label the Column as Dream Salary.
+SELECT Ename||' earns $'||Salary||' monthly but wants $'||Salary*3 "Dream Salary" 
+    FROM EMPLOYEE
+
+20. Query to display Name with the 1st letter capitalized and all other letter lower case and length
+of their name of all the employees whose name starts with ‘J’, ’A’ and ‘M’.
+select INITCAP(ename) "Name", LENGTH(ename) "Length of Name" 
+from employee 
+where ename like'J%'or ename like'A%' OR ename like'M%' 
+order by ename
+
+21. Query to display Name, Hire Date and Day of the week on which the employee started.
+SELECT Ename,Hire_date,TO_CHAR(Hire_date,'Day') AS "DAY" 
+FROM employee
+
+22. Query to display Name, Department Name and Department No for all the employees.
+SELECT E.Ename,D.Dname,E.Dno  
+FROM Employee E,Department D 
+WHERE E.Dno=D.Dno
+
+23. Query to display Unique Listing of all Jobs that are in Department # 30.
+SELECT DISTINCT Job_type 
+FROM Employee 
+WHERE Dno=30
+
+24. Query to display Name, Dept Name of all employees who have an ‘A’ in their name.
+SELECT e.Ename,d.Dname  
+FROM Employee e,Department d 
+WHERE e.Ename LIKE '%A%' AND e.Dno=d.Dno
+
+25. Query to display Name, Job, Department No. And Department Name for all the employees
+working at the Dallas location.
+SELECT e.Ename,e.Job_type,e.Dno,d.Dname 
+FROM Employee e,Department d  
+WHERE e.Dno=d.Dno AND d.Location_dep='Dallas'
+
+26. Query to display Name and Employee no. Along with their Manger’s Name and the Manager’s
+employee no; along with the Employees’ Name who do not have a Manager.
+SELECT d.Ename AS "EMPLOYEE",d.Eno AS "EMPLOYEE NUMBER",e.Ename AS "MANAGER",e.Eno AS "MANAGER NO"  
+FROM Employee d 
+LEFT OUTER JOIN Employee e ON e.Eno=d.Manager
+
+27. Query to display Name, Dept No. And Salary of any employee whose department No. and
+salary matches both the department no. And the salary of any employee who earns a
+commission.
+SELECT x.Ename,x.Dno,x.Salary 
+FROM Employee x,Employee y 
+WHERE x.Dno=y.Dno AND x.Salary=y.Salary AND x.Ename<>y.Ename AND y.Commission IS NOT NULL
+
+28. Query to display Name and Salaries represented by asterisks, where each asterisk (*) signifies
+$100.
+SELECT Ename,RPAD('*',Salary/100,'*') AS SALARY_IN_STAR 
+FROM Employee
+
+29. Query to display the Highest, Lowest, Sum and Average Salaries of all the employees
+SELECT MAX(Salary),MIN(Salary),SUM(Salary),AVG(Salary) 
+FROM Employee
+
+30. Query to display the number of employees performing the same Job type functions.
+SELECT Job_type,COUNT(*) 
+FROM Employee 
+GROUP BY Job_type
+
+31. Query to display the no. of managers without listing their names.
+SELECT COUNT(DISTINCT Manager) 
+FROM Employee
+
+32. Query to display the Department Name, Location Name, No. of Employees and the average
+salary for all employees in that department.
+SELECT y.Dname, y.Location_dep,AVG(x.Salary),COUNT(*) 
+FROM Employee x,DEPARTMENT y 
+WHERE x.Dno=y.Dno 
+GROUP BY (y.Dname,y.Location_dep)
+
+33. Query to display Name and Hire Date for all employees in the same dept. as Blake.
+SELECT Ename,Hire_date  
+FROM Employee 
+WHERE Dno in (SELECT Dno FROM Employee WHERE Ename='Blake')
+
+34. Query to display the Employee No. And Name for all employees who earn more than the
+average salary.
+SELECT Eno,Ename  
+FROM Employee 
+WHERE Salary>(SELECT AVG(Salary) FROM Employee)
+
+35. Query to display Employee Number and Name for all employees who work in a department
+with any employee whose name contains a ‘T’.
+SELECT Eno,Ename FROM Employee  
+WHERE Dno IN (SELECT Dno FROM Employee WHERE Ename LIKE '%T%')
+
+36. Query to display the names and salaries of all employees who report to King.
+SELECT Ename,Salary  
+FROM Employee 
+WHERE Manager in (SELECT Eno FROM Employee WHERE Ename='King')
+
+37. Query to display the department no, name and job for all employees in the Sales department.
+SELECT x.Dno,x.Ename,x.Job_type,y.Dname 
+FROM Employee x,Department y  
+WHERE y.Dno=x.Dno AND y.Dname='Sales'
