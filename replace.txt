@@ -1,0 +1,1 @@
+echo preg_replace('/the/','That',$s,1);
