@@ -1,0 +1,10 @@
+The following SQL statement creates a stored procedure named "SelectAllCustomers" that selects all records from the "Customers" table:
+Example
+CREATE PROCEDURE SelectAllCustomers
+AS
+SELECT * FROM Customers
+GO;
+
+Execute the stored procedure above as follows:
+Example
+EXEC SelectAllCustomers;
